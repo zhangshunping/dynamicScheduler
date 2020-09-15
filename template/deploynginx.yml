@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginxtest
+  namespace: default
+spec:
+  replicas: 50
+  selector:
+    matchLabels:
+      run: nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: status
+                    operator: NotIn
+                    values:
+                      - presure
+              weight: 20
+
+      containers:
+        - image: nginx
+          imagePullPolicy: Always
+          name: nginx
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always

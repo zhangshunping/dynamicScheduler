@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: kube-ops
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval:     15s
+      evaluation_interval: 15s
+
+    scrape_configs:
+    - job_name: '测试环境k8s资源节点监控'
+      kubernetes_sd_configs:
+      - role: node
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_node_address_InternalIP]
+        regex: '(.*)'
+        replacement: '${1}:9100'
+        target_label: __address__
+
+
+    - job_name: 'pushgateway'
+      honor_labels: true
+      static_configs:
+      - targets: ['172.16.95.4:49091']
+
+
+
+    - job_name: 'prometheus'
+      scrape_interval:     10s
+      static_configs:
+      - targets: ['localhost:9090']
+
