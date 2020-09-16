@@ -1141,3 +1141,26 @@
 2020-09-15T19:04:35+08:00 [INFO] 当前有2个节点已经处于status=presure状态: [pre-host-work02 pre-k8s-work01]
 2020-09-15T19:04:35+08:00 [INFO] Ending,id=2,耗时175.5615ms
 2020-09-15T19:04:35+08:00 [INFO] <-------------------------------------->
+2020-09-15T19:16:15+08:00 [INFO] Staring,id=1
+2020-09-15T19:16:15+08:00 [INFO] ============Cpu==========
+2020-09-15T19:16:15+08:00 [INFO] pre-host-work02节点当前cpu使用率为: 4.64671467154143
+2020-09-15T19:16:15+08:00 [INFO] pre-k8s-work01节点当前cpu使用率为: 5.494008591475586
+2020-09-15T19:16:15+08:00 [INFO] taliyun-k8s-master01节点当前cpu使用率为: 7.214269484196967
+2020-09-15T19:16:15+08:00 [INFO] Cpu使用率超过1的节点列表：[pre-host-work02 pre-k8s-work01 taliyun-k8s-master01]
+2020-09-15T19:16:15+08:00 [INFO] ============Mem==========
+2020-09-15T19:16:15+08:00 [INFO] pre-host-work02节点当前mem使用率为: 28.772682038053844
+2020-09-15T19:16:15+08:00 [INFO] pre-k8s-work01节点当前mem使用率为: 29.836169464840058
+2020-09-15T19:16:15+08:00 [INFO] taliyun-k8s-master01节点当前mem使用率为: 74.08365763768975
+2020-09-15T19:16:15+08:00 [INFO] Mem 使用率超过阈值1的节点列表: [pre-host-work02 pre-k8s-work01 taliyun-k8s-master01]
+2020-09-15T19:16:15+08:00 [INFO] pre-host-work02节点当前CgoupsMemAvailable使用率为: 1333
+2020-09-15T19:16:15+08:00 [INFO] pre-k8s-work01节点当前CgoupsMemAvailable使用率为: 1453
+2020-09-15T19:16:15+08:00 [INFO] taliyun-k8s-master01节点当前CgoupsMemAvailable使用率为: 861
+2020-09-15T19:16:15+08:00 [INFO] 节点memory.available低于2040阈值的节点列表： [pre-host-work02 pre-k8s-work01 taliyun-k8s-master01]
+2020-09-15T19:16:15+08:00 [INFO] ============Label==========
+2020-09-15T19:16:15+08:00 [INFO] 打上presure标签:
+2020-09-15T19:16:15+08:00 [INFO] 给节点pre-host-work02打type=presure标签成功
+2020-09-15T19:16:15+08:00 [INFO] 给节点pre-k8s-work01打type=presure标签成功
+2020-09-15T19:16:15+08:00 [INFO] taliyun-k8s-master01节点为master节点，不参与平衡调度标签策略
+2020-09-15T19:16:15+08:00 [INFO] 当前有2个节点已经处于status=presure状态: [pre-host-work02 pre-k8s-work01]
+2020-09-15T19:16:15+08:00 [INFO] Ending,id=1,耗时185.4972ms
+2020-09-15T19:16:15+08:00 [INFO] <-------------------------------------->
