@@ -12,11 +12,9 @@ kubernetes调度策略默认根据node节点的request值（cpu和mem）进行�
 
 - request接近于limits,导致node节点上分配的pod数量有限，不能够最大容量的分配pod，而本身设置limits值的原因大多是基于高峰资源，而实际业务大多数情况并未处于高峰状态，所以会造成资源浪费。
 
-- 
-
 - 个性化原因：
 
-  - 我们的业务模型创建的pod是自主性pod，虽然社区针对这样的问题有一些好用的开源的平衡组件[descheduler](https://github.com/kubernetes-sigs/descheduler)，但不满足实际的问题，我们需要的时候一个调度的时候就可以根据资源消耗情况选择调度，而descheduler是通过controller的方式对正在集群内的pod进行平衡。
+  - 我们的业务模型创建的pod是自主性pod，虽然社区针对这样的问题有一些好用的开源的平衡组件[descheduler](https://github.com/kubernetes-sigs/descheduler)，但不满足实际的问题，我们需要的是一个在调度的时候就可以根据资源消耗情况选择调度的组件，而descheduler是通过controller的方式对正在集群内的pod进行平衡，不满足我们目前的需求。
 
   - kubelet内存驱逐条件（memory.available）,是通过计算cgroups下资源换算得来的，我们的业务是频繁的创建pod环境，然后销毁，可能会有一些pod跑业务的gc出现问题，导致内存无法释放，而此时free -h看到的内存可使用率仍然ok，但实际上/sys/fs/cgroups/memory下的memory.usage_in_bytes的值已经接近整个内存总量了。根据公式
 
