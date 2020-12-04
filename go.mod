@@ -15,3 +15,5 @@ require (
 	k8s.io/utils v0.0.0-20200821003339-5e75c0163111 // indirect
 
 )
+
+replace github.com/googleapis/gnostic v0.5.3 => github.com/googleapis/gnostic v0.1.0
