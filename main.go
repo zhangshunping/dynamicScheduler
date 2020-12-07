@@ -196,8 +196,10 @@ func LabelNodeByPromMetrics(stopCh <-chan struct{}, factory informers.SharedInfo
 			//3.4 label status=presure 和去掉 status=presure
 			utils.Log.Info("打上presure标签:")
 			PatchNode(clientset, ctx, "presure", ReadyForLabelPresure)
-			//utils.Log.Info("去掉presure标签：")
-			//PatchNode(clientset, ctx, "nil", ReadyForLabelNil)
+			
+			//3.5需补充，对已经为nil的节点则不重复patch为nil*****-******************
+			utils.Log.Info("去掉presure标签：")
+			PatchNode(clientset, ctx, "nil", ReadyForLabelNil)
 
 			utils.Log.Infof("当前有%d个节点已经处于status=presure状态: %v", len(FitSelectorAndAlreadyLabelPresureNodeNames), FitSelectorAndAlreadyLabelPresureNodeNames)
 			utils.Log.Infof("Ending,id=%v,耗时%v", count, time.Since(now))
