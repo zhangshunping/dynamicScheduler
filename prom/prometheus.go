@@ -16,7 +16,9 @@ import (
 
 // promethues merics
 var (
-	PrometheusJob="测试环境k8s资源节点监控"
+	//PrometheusJob="测试环境k8s资源节点监控"
+
+	PrometheusJob string
 	Node_load15 string = fmt.Sprintf("node_load15{job='%s'}", PrometheusJob)
 	Node_load5 string = fmt.Sprintf("node_load5{job='%s'}", PrometheusJob)
 	Node_load1 string = fmt.Sprintf("node_load1{job='%s'}", PrometheusJob)

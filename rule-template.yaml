@@ -1,0 +1,13 @@
+PromJob:
+  Name: "测试环境k8s资源节点监控"
+Rulename:
+  ## 过去一分钟之内的node的cpu使用率
+  Node_cpu1:
+    Promsql: "(1-(sum(increase(node_cpu_seconds_total{job='测试环境k8s资源节点监控',mode='idle'}[1m]))by(instance))/(sum(increase(node_cpu_seconds_total{job='测试环境k8s资源节点监控'}[1m]))by(instance)))*100"
+    Threshold: 70
+  ## 内存使用率
+  Node_mem:
+    Promsql: "(1 - (node_memory_MemAvailable_bytes{job='测试环境k8s资源节点监控'} / (node_memory_MemTotal_bytes{job='测试环境k8s资源节点监控'})))* 100"
+    Threshold: 70
+
+

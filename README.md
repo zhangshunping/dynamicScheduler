@@ -83,25 +83,18 @@ kubernetes调度策略默认根据node节点的request值（cpu和mem）进行�
 ### 使用方式
 
 ```shell
-./dynamic-sheduler --help
-  -cmem float
-        kubelet驱逐memory.availabele的阈值 (-cmem 2040) (default 2040)
-  -cpu float
-        节点过去一分钟使用率阈值 (-cpu 10) (default 60)
-  -kubeconfig string
-        链接k8s kubeconfig的绝对路径 (default "C:\\Users\\39295\\go\\src\\config")
-  -mem float
-        节点内存使用率阈值 (-mem 10) (default 80)
-  -prom string
-        prometheus链接地址(-prom http://121.40.XX.XX:49090) (default "http://121.40.XX.XX:49090")
-  -promjob string
-        promtheus采集的node节点job名称(-promjob 测试环境k8s资源节点监控) (default "测试环境k8s资源节点监控")
-  -s int
-        每次抓取prometheus metrics间隔（-s 10) (default 10)
-  -webaddr string
-        启动服务端口地址(-webaddr :9000) (default ":9000")
-exit status 2
 
+Usage of ./dynamicScheduler:
+  -kubeconfig string
+    	链接k8s kubeconfig的绝对路径 (default "/root/gocode/src/config")
+  -prom string
+    	prometheus链接地址(-prom http://121.40.XX.XX:49090) (default "http://121.40.XX.XX:49090")
+  -r string
+    	查询prometheus 阈值规则 (default "rule.yaml")
+  -s int
+    	每次抓取prometheus metrics间隔（-s 10) (default 10)
+  -webaddr string
+    	启动服务端口地址(-webaddr :9000) (default ":9000")
 
 ```
 

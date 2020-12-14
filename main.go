@@ -33,9 +33,8 @@ var (
 	FitSelectorNodes                           []*v1.Node //根据标签选择器获取的当前node slice
 	presureNodesNameFromProm                   []string
 	count, scrape_interval                    int
-	cpuThreshold, memThreshold,CgroupsMemThreshold     float64
-	promAddress,webaddr                                string
-
+	promAddress,webaddr,rulepath                               string
+	UpperPresureNodeNames []string
 )
 
 const (
@@ -46,17 +45,14 @@ type Response struct {
 	Type      string   `json:"type"`
 	Num       int      `json:"num"`
 	NodeNames []string `json:"node_names"`
+
 }
 
 func init() {
-	flag.Float64Var(&cpuThreshold, "cpu", 60.00, "节点过去一分钟使用率阈值 (-cpu 10)")
-	flag.Float64Var(&memThreshold, "mem", 80.00, "节点内存使用率阈值 (-mem 10)")
-	flag.Float64Var(&CgroupsMemThreshold, "cmem", 2040.00, "kubelet驱逐memory.availabele的阈值 (-cmem 2040)")
 	flag.IntVar(&scrape_interval, "s", 10, "每次抓取prometheus metrics间隔（-s 10)")
 	flag.StringVar(&promAddress, "prom", "http://121.40.XX.XX:49090", "prometheus链接地址(-prom http://121.40.XX.XX:49090)")
 	flag.StringVar(&webaddr, "webaddr", ":9000", "启动服务端口地址(-webaddr :9000)")
-	flag.StringVar(&prom.PrometheusJob, "promjob", "测试环境k8s资源节点监控", "promtheus采集的node节点job名称(-promjob 测试环境k8s资源节点监控)")
-
+	flag.StringVar(&rulepath,"r","rule.yaml" , "查询prometheus 阈值规则")
 }
 
 func main() {
@@ -165,6 +161,15 @@ func LabelNodeByPromMetrics(stopCh <-chan struct{}, factory informers.SharedInfo
 			}
 			//3.1获取超出阈值的node节点 names
 			presureNodesNameFromProm = []string{} // 清空presureNodesName nodes
+			for k, v := range(utils.GetRuleFromYaml(rulepath)) {
+				m,_:=prom.QueryRebuild(v1api, ctx,v["Promsql"],time.Now())
+				th:=v["Threshold"]
+				floatth,_:=strconv.ParseFloat(th, 64)
+				UpperPresureNodeNames = CountUpperPresureNodeFromProm(m, floatth,k,CgroupsMemClose)
+				utils.Log.Infof("%s 超过%v的节点列表：%v", k,floatth,UpperPresureNodeNames)
+			}
+
+			/* 旧代码逻辑
 			//3.2计算过去一分钟cpu的使用率
 			utils.Log.Info("============Cpu==========")
 			resultFromPromSilceMap, _ := prom.QueryRebuild(v1api, ctx, prom.Node_cpu1, time.Now())
@@ -180,6 +185,7 @@ func LabelNodeByPromMetrics(stopCh <-chan struct{}, factory informers.SharedInfo
 			UpperPresureNodeNames = CountUpperPresureNodeFromProm(CgroupMems, CgroupsMemThreshold, "CgoupsMemAvailable",CgroupsMemOpen)
 			utils.Log.Infof("节点memory.available低于%v阈值的节点列表： %v ", CgroupsMemThreshold, UpperPresureNodeNames)
 			utils.Log.Info("============Label==========")
+			*/
 
 			//3.2清空v1.Node列表(打赏presure标签的Nodes和去掉标签的Nodes)
 			ReadyForLabelPresure := []*v1.Node{}
@@ -194,11 +200,8 @@ func LabelNodeByPromMetrics(stopCh <-chan struct{}, factory informers.SharedInfo
 				}
 			}
 			//3.4 label status=presure 和去掉 status=presure
-			utils.Log.Info("打上presure标签:")
 			PatchNode(clientset, ctx, "presure", ReadyForLabelPresure)
-			
 			//3.5需补充，对已经为nil的节点则不重复patch为nil*****-******************
-			utils.Log.Info("去掉presure标签：")
 			PatchNode(clientset, ctx, "nil", ReadyForLabelNil)
 
 			utils.Log.Infof("当前有%d个节点已经处于status=presure状态: %v", len(FitSelectorAndAlreadyLabelPresureNodeNames), FitSelectorAndAlreadyLabelPresureNodeNames)
@@ -287,3 +290,4 @@ func IsExitArray(value string, arry []string) bool {
 	}
 	return false
 }
+
